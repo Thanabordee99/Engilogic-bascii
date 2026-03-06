@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thai Consonant Drill</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
+      color: #111;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    /* START SCREEN */
+    .start-screen {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 80vh;
+    }
+
+    .start-card {
+      width: 100%;
+      max-width: 580px;
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .start-card h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .start-card h2 {
+      margin: 0 0 28px;
+      font-size: 22px;
+      font-weight: 400;
+    }
+
+    .nickname-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 18px;
+      border: 2px solid #222;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      outline: none;
+    }
+
+    .start-btn {
+      background: #1277f2;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .start-btn:hover {
+      background: #0f68d2;
+    }
+
+    /* QUIZ SCREEN */
+    .quiz-screen {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 30px;
+      align-items: start;
+      min-height: 80vh;
+    }
+
+    .left-panel {
+      background: transparent;
+    }
+
+    .divider {
+      background: #cfcfcf;
+      width: 1px;
+      min-height: 80vh;
+    }
+
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
+
+    .nickname-display {
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+
+    .hearts {
+      font-size: 36px;
+      color: #e53935;
+      margin-bottom: 10px;
+      letter-spacing: 4px;
+    }
+
+    .remaining {
+      font-size: 20px;
+      margin-bottom: 26px;
+    }
+
+    .quiz-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .letter {
+      font-size: 100px;
+      margin-bottom: 36px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .choices {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      border: none;
+      background: #dfe3e8;
+      padding: 18px 20px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .choice-btn:hover {
+      background: #cfd5db;
+    }
+
+    .choice-btn.correct {
+      background: #9be59b;
+    }
+
+    .choice-btn.wrong {
+      background: #f5a3a3;
+    }
+
+    .end-message {
+      margin-top: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .quiz-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .divider,
+      .left-panel {
+        display: none;
+      }
+
+      .right-panel {
+        padding-top: 0;
+      }
+
+      .letter {
+        font-size: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="container">
+
+      <!-- START SCREEN -->
+      <div class="start-screen" id="startScreen">
+        <div class="start-card">
+          <h1>CSII Team X presents</h1>
+          <h2>Thai Consonants</h2>
+
+          <input
+            type="text"
+            id="nicknameInput"
+            class="nickname-input"
+            placeholder="Enter your nickname"
+          />
+
+          <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+        </div>
+      </div>
+
+      <!-- QUIZ SCREEN -->
+      <div class="quiz-screen" id="quizScreen">
+        <div class="quiz-layout">
+          <div class="left-panel"></div>
+          <div class="divider"></div>
+
+          <div class="right-panel">
+            <div class="nickname-display" id="nicknameDisplay">Player</div>
+            <div class="hearts" id="heartsDisplay">❤️❤️❤️</div>
+            <div class="remaining" id="remainingDisplay">Remaining: 0</div>
+            <div class="quiz-title">Thai Consonant Drill</div>
+
+            <div class="letter" id="questionLetter">ฮ</div>
+
+            <div class="choices" id="choicesContainer"></div>
+
+            <div class="end-message" id="endMessage"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        letter: "ฮ",
+        choices: ["hor nok-huk — Low", "bor bai-mai — Middle", "yor yak — Low"],
+        answer: "hor nok-huk — Low"
+      },
+      {
+        letter: "บ",
+        choices: ["bor bai-mai — Middle", "to patak — Middle", "yor yak — Low"],
+        answer: "bor bai-mai — Middle"
+      },
+      {
+        letter: "ต",
+        choices: ["bor bai-mai — Middle", "to patak — Middle", "ngor ngu — Low"],
+        answer: "to patak — Middle"
+      },
+      {
+        letter: "ย",
+        choices: ["yor yak — Low", "ror rua — Low", "mor ma — Low"],
+        answer: "yor yak — Low"
+      },
+      {
+        letter: "ก",
+        choices: ["ko kai — Middle", "cho chang — Low", "pho phan — Low"],
+        answer: "ko kai — Middle"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let hearts = 3;
+
+    function startQuiz() {
+      const nickname = document.getElementById("nicknameInput").value.trim();
+      const displayName = nickname === "" ? "Player" : nickname;
+
+      document.getElementById("nicknameDisplay").textContent = displayName;
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("quizScreen").style.display = "flex";
+
+      currentQuestion = 0;
+      hearts = 3;
+      updateHearts();
+      loadQuestion();
+    }
+
+    function updateHearts() {
+      let heartText = "";
+      for (let i = 0; i < hearts; i++) {
+        heartText += "❤️";
+      }
+      document.getElementById("heartsDisplay").textContent = heartText || "💔";
+    }
+
+    function loadQuestion() {
+      const endMessage = document.getElementById("endMessage");
+      endMessage.textContent = "";
+
+      if (hearts <= 0) {
+        endQuiz("Game Over!");
+        return;
+      }
+
+      if (currentQuestion >= questions.length) {
+        endQuiz("You finished the quiz!");
+        return;
+      }
+
+      const question = questions[currentQuestion];
+      document.getElementById("questionLetter").textContent = question.letter;
+      document.getElementById("remainingDisplay").textContent =
+        "Remaining: " + (questions.length - currentQuestion);
+
+      const choicesContainer = document.getElementById("choicesContainer");
+      choicesContainer.innerHTML = "";
+
+      question.choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.className = "choice-btn";
+        button.textContent = choice;
+        button.onclick = () => checkAnswer(button, choice);
+        choicesContainer.appendChild(button);
+      });
+    }
+
+    function checkAnswer(button, selectedChoice) {
+      const question = questions[currentQuestion];
+      const allButtons = document.querySelectorAll(".choice-btn");
+
+      allButtons.forEach(btn => btn.disabled = true);
+
+      if (selectedChoice === question.answer) {
+        button.classList.add("correct");
+      } else {
+        button.classList.add("wrong");
+        hearts--;
+        updateHearts();
+
+        allButtons.forEach(btn => {
+          if (btn.textContent === question.answer) {
+            btn.classList.add("correct");
+          }
+        });
+      }
+
+      setTimeout(() => {
+        currentQuestion++;
+        loadQuestion();
+      }, 900);
+    }
+
+    function endQuiz(message) {
+      document.getElementById("questionLetter").textContent = "";
+      document.getElementById("choicesContainer").innerHTML = "";
+      document.getElementById("remainingDisplay").textContent = "Remaining: 0";
+      document.getElementById("endMessage").textContent = message;
+    }
+  </script>
+</body>
+</html>
