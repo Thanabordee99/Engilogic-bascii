@@ -1,442 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thai Consonant Drill</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;600&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4A90E2;
-            --success: #2ECC71;
-            --danger: #E74C3C;
-            --bg: #F5F7FA;
-            --card: #FFFFFF;
-            --text: #2c3e50;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thai Consonant Drill</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Sarabun', sans-serif;
-            background-color: var(--bg);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: var(--text);
-            overflow: hidden; /* Prevent scrolling during game */
-        }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
+      color: #111;
+    }
 
-        /* --- START SCREEN --- */
-        #start-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--bg);
-            z-index: 200; /* On top of everything */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            animation: fadeIn 0.5s ease-in;
-        }
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
 
-        .team-brand {
-            font-size: 1.2rem;
-            color: #7f8c8d;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+    }
 
-        .team-name-large {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 30px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    /* START SCREEN */
+    .start-screen {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 80vh;
+    }
 
-        .app-title {
-            font-size: 1.5rem;
-            margin-bottom: 40px;
-            color: #333;
-        }
+    .start-card {
+      width: 100%;
+      max-width: 580px;
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
 
-        .btn-start {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px 50px;
-            font-size: 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: bold;
-        }
+    .start-card h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      font-weight: 700;
+    }
 
-        .btn-start:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
-        }
+    .start-card h2 {
+      margin: 0 0 28px;
+      font-size: 22px;
+      font-weight: 400;
+    }
 
-        /* --- GAME CONTAINER --- */
-        .container {
-            background: var(--card);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            position: relative;
-            display: none; /* Hidden until start */
-        }
+    .nickname-input {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 18px;
+      border: 2px solid #222;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      outline: none;
+    }
 
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            padding: 0 10px;
-            font-weight: bold;
-        }
+    .start-btn {
+      background: #1277f2;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
 
-        .hearts {
-            color: var(--danger);
-            letter-spacing: 5px;
-        }
+    .start-btn:hover {
+      background: #0f68d2;
+    }
 
-        /* The prompt area */
-        .question-box { margin-bottom: 2rem; }
-        
-        .question-text {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
+    /* QUIZ SCREEN */
+    .quiz-screen {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
 
-        .sub-text {
-            color: #7f8c8d;
-            font-size: 1.1rem;
-        }
+    .quiz-layout {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 30px;
+      align-items: start;
+      min-height: 80vh;
+    }
 
-        /* The Grid for Options */
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
+    .left-panel {
+      background: transparent;
+    }
 
-        .option-btn {
-            background: #fff;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            font-family: 'Kanit', sans-serif;
-            font-size: 3.5rem; 
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #333;
-            line-height: 1;
-        }
+    .divider {
+      background: #cfcfcf;
+      width: 1px;
+      min-height: 80vh;
+    }
 
-        .option-btn:hover {
-            border-color: var(--primary);
-            background-color: #f0f7ff;
-            transform: translateY(-2px);
-        }
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
 
-        .correct {
-            background-color: var(--success) !important;
-            color: white !important;
-            border-color: var(--success) !important;
-        }
+    .nickname-display {
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
 
-        .wrong {
-            background-color: var(--danger) !important;
-            color: white !important;
-            border-color: var(--danger) !important;
-            animation: shake 0.5s;
-        }
+    .hearts {
+      font-size: 36px;
+      color: #e53935;
+      margin-bottom: 10px;
+      letter-spacing: 4px;
+    }
 
-        /* Result Display */
-        #result-area {
-            margin-top: 25px;
-            display: none;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-        }
-        
-        #result-message { margin: 0 0 10px 0; font-size: 1.4rem; }
+    .remaining {
+      font-size: 20px;
+      margin-bottom: 26px;
+    }
 
-        .btn-next, .btn-restart {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-weight: 600;
-            box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
-        }
+    .quiz-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+    }
 
-        .footer {
-            margin-top: 2rem;
-            color: #95a5a6;
-            font-size: 0.9rem;
-            display: none; /* Hidden until start */
-        }
-        
-        .footer strong { color: var(--primary); }
+    .letter {
+      font-size: 100px;
+      margin-bottom: 36px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        /* Game Over Overlay */
-        #game-over {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: white;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-        }
+    .choices {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
 
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+    .choice-btn {
+      width: 100%;
+      border: none;
+      background: #dfe3e8;
+      padding: 18px 20px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .choice-btn:hover {
+      background: #cfd5db;
+    }
+
+    .choice-btn.correct {
+      background: #9be59b;
+    }
+
+    .choice-btn.wrong {
+      background: #f5a3a3;
+    }
+
+    .end-message {
+      margin-top: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .quiz-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .divider,
+      .left-panel {
+        display: none;
+      }
+
+      .right-panel {
+        padding-top: 0;
+      }
+
+      .letter {
+        font-size: 80px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="page">
+    <div class="container">
 
-    <div id="start-screen">
-        <div class="team-brand">Produced By</div>
-        <div class="team-name-large">Engineering-Logic-group</div>
-        <div class="app-title">Thai Consonant Drill</div>
-        <button class="btn-start" onclick="beginSession()">Start Drill</button>
-    </div>
+      <!-- START SCREEN -->
+      <div class="start-screen" id="startScreen">
+        <div class="start-card">
+          <h1>CSII Team X presents</h1>
+          <h2>Thai Consonants</h2>
 
-    <div class="container" id="game-container">
-        <div class="stats">
-            <span id="score">Score: 0</span>
-            <span class="hearts" id="hearts">❤️❤️❤️</span>
+          <input
+            type="text"
+            id="nicknameInput"
+            class="nickname-input"
+            placeholder="Enter your nickname"
+          />
+
+          <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
         </div>
+      </div>
 
-        <div class="question-box">
-            <div class="sub-text">Find the character for:</div>
-            <div class="question-text" id="target-name">Ko Kai</div>
-            <div class="sub-text" id="target-meaning">(Chicken)</div>
+      <!-- QUIZ SCREEN -->
+      <div class="quiz-screen" id="quizScreen">
+        <div class="quiz-layout">
+          <div class="left-panel"></div>
+          <div class="divider"></div>
+
+          <div class="right-panel">
+            <div class="nickname-display" id="nicknameDisplay">Player</div>
+            <div class="hearts" id="heartsDisplay">❤️❤️❤️</div>
+            <div class="remaining" id="remainingDisplay">Remaining: 0</div>
+            <div class="quiz-title">Thai Consonant Drill</div>
+
+            <div class="letter" id="questionLetter">ฮ</div>
+
+            <div class="choices" id="choicesContainer"></div>
+
+            <div class="end-message" id="endMessage"></div>
+          </div>
         </div>
+      </div>
 
-        <div class="options-grid" id="options-container">
-            </div>
-
-        <div id="result-area">
-            <h3 id="result-message"></h3>
-            <p id="result-detail"></p>
-            <button class="btn-next" onclick="nextQuestion()">Next Consonant</button>
-        </div>
     </div>
+  </div>
 
-    <div class="footer" id="game-footer">
-        Powered by <strong>Engineering-Logic-group</strong>
-    </div>
+  <script>
+    const questions = [
+      {
+        letter: "ฮ",
+        choices: ["hor nok-huk — Low", "bor bai-mai — Middle", "yor yak — Low"],
+        answer: "hor nok-huk — Low"
+      },
+      {
+        letter: "บ",
+        choices: ["bor bai-mai — Middle", "to patak — Middle", "yor yak — Low"],
+        answer: "bor bai-mai — Middle"
+      },
+      {
+        letter: "ต",
+        choices: ["bor bai-mai — Middle", "to patak — Middle", "ngor ngu — Low"],
+        answer: "to patak — Middle"
+      },
+      {
+        letter: "ย",
+        choices: ["yor yak — Low", "ror rua — Low", "mor ma — Low"],
+        answer: "yor yak — Low"
+      },
+      {
+        letter: "ก",
+        choices: ["ko kai — Middle", "cho chang — Low", "pho phan — Low"],
+        answer: "ko kai — Middle"
+      }
+    ];
 
-    <div id="game-over">
-        <h1 style="font-size: 3rem; margin-bottom: 10px;">Game Over</h1>
-        <p style="font-size: 1.5rem; margin-bottom: 20px;">You ran out of hearts!</p>
-        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
-            <p style="font-size: 1.2rem; margin:0;">Final Score</p>
-            <p style="font-size: 3rem; margin:0; font-weight: bold;" id="final-score">0</p>
-        </div>
-        <button class="btn-restart" onclick="restartGame()">Try Again</button>
-    </div>
+    let currentQuestion = 0;
+    let hearts = 3;
 
-    <script>
-        // Data: All 44 Thai Consonants
-        const consonants = [
-            { char: "ก", trans: "Ko Kai", meaning: "Chicken" },
-            { char: "ข", trans: "Kho Khai", meaning: "Egg" },
-            { char: "ฃ", trans: "Kho Khuad", meaning: "Bottle (Obsolete)" },
-            { char: "ค", trans: "Kho Khwai", meaning: "Buffalo" },
-            { char: "ฅ", trans: "Kho Khon", meaning: "Person (Obsolete)" },
-            { char: "ฆ", trans: "Kho Ra-khang", meaning: "Bell" },
-            { char: "ง", trans: "Ngo Ngu", meaning: "Snake" },
-            { char: "จ", trans: "Cho Chan", meaning: "Plate" },
-            { char: "ฉ", trans: "Cho Ching", meaning: "Cymbals" },
-            { char: "ช", trans: "Cho Chang", meaning: "Elephant" },
-            { char: "ซ", trans: "So So", meaning: "Chain" },
-            { char: "ฌ", trans: "Cho Cho", meaning: "Tree" },
-            { char: "ญ", trans: "Yo Ying", meaning: "Woman" },
-            { char: "ฎ", trans: "Do Cha-da", meaning: "Headdress" },
-            { char: "ฏ", trans: "To Pa-tak", meaning: "Goad/Spear" },
-            { char: "ฐ", trans: "Tho Than", meaning: "Pedestal" },
-            { char: "ฑ", trans: "Tho Nang-mon-tho", meaning: "Montho (Character)" },
-            { char: "ฒ", trans: "Tho Phu-thao", meaning: "Elder" },
-            { char: "ณ", trans: "No Nen", meaning: "Novice Monk" },
-            { char: "ด", trans: "Do Dek", meaning: "Child" },
-            { char: "ต", trans: "To Tao", meaning: "Turtle" },
-            { char: "ถ", trans: "Tho Thung", meaning: "Sack" },
-            { char: "ท", trans: "Tho Thahan", meaning: "Soldier" },
-            { char: "ธ", trans: "Tho Thong", meaning: "Flag" },
-            { char: "น", trans: "No Nu", meaning: "Mouse" },
-            { char: "บ", trans: "Bo Baimai", meaning: "Leaf" },
-            { char: "ป", trans: "Po Pla", meaning: "Fish" },
-            { char: "ผ", trans: "Pho Phueng", meaning: "Bee" },
-            { char: "ฝ", trans: "Fo Fa", meaning: "Lid" },
-            { char: "พ", trans: "Pho Phan", meaning: "Tray" },
-            { char: "ฟ", trans: "Fo Fan", meaning: "Teeth" },
-            { char: "ภ", trans: "Pho Sam-phao", meaning: "Junk (Boat)" },
-            { char: "ม", trans: "Mo Ma", meaning: "Horse" },
-            { char: "ย", trans: "Yo Yak", meaning: "Giant" },
-            { char: "ร", trans: "Ro Ruea", meaning: "Boat" },
-            { char: "ล", trans: "Lo Ling", meaning: "Monkey" },
-            { char: "ว", trans: "Wo Waen", meaning: "Ring" },
-            { char: "ศ", trans: "So Sala", meaning: "Pavilion" },
-            { char: "ษ", trans: "So Ruesi", meaning: "Hermit" },
-            { char: "ส", trans: "So Suea", meaning: "Tiger" },
-            { char: "ห", trans: "Ho Hip", meaning: "Chest/Box" },
-            { char: "ฬ", trans: "Lo Chu-la", meaning: "Kite" },
-            { char: "อ", trans: "O Ang", meaning: "Basin" },
-            { char: "ฮ", trans: "Ho Nok-huk", meaning: "Owl" }
-        ];
+    function startQuiz() {
+      const nickname = document.getElementById("nicknameInput").value.trim();
+      const displayName = nickname === "" ? "Player" : nickname;
 
-        let currentHearts = 3;
-        let score = 0;
-        let currentQuestion = null;
-        let isAnswering = true;
+      document.getElementById("nicknameDisplay").textContent = displayName;
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("quizScreen").style.display = "flex";
 
-        const startScreen = document.getElementById('start-screen');
-        const gameContainer = document.getElementById('game-container');
-        const gameFooter = document.getElementById('game-footer');
-        const heartsEl = document.getElementById('hearts');
-        const scoreEl = document.getElementById('score');
-        const targetNameEl = document.getElementById('target-name');
-        const targetMeaningEl = document.getElementById('target-meaning');
-        const optionsContainer = document.getElementById('options-container');
-        const resultArea = document.getElementById('result-area');
-        const resultMsg = document.getElementById('result-message');
-        const resultDetail = document.getElementById('result-detail');
-        const gameOverScreen = document.getElementById('game-over');
-        const finalScoreEl = document.getElementById('final-score');
+      currentQuestion = 0;
+      hearts = 3;
+      updateHearts();
+      loadQuestion();
+    }
 
-        // Called when user clicks "Start Drill"
-        function beginSession() {
-            startScreen.style.display = 'none';
-            gameContainer.style.display = 'block';
-            gameFooter.style.display = 'block';
-            initGame();
-        }
+    function updateHearts() {
+      let heartText = "";
+      for (let i = 0; i < hearts; i++) {
+        heartText += "❤️";
+      }
+      document.getElementById("heartsDisplay").textContent = heartText || "💔";
+    }
 
-        function initGame() {
-            currentHearts = 3;
-            score = 0;
-            heartsEl.style.opacity = '1';
-            updateStats();
-            gameOverScreen.style.display = 'none';
-            nextQuestion();
-        }
+    function loadQuestion() {
+      const endMessage = document.getElementById("endMessage");
+      endMessage.textContent = "";
 
-        function updateStats() {
-            let heartString = "";
-            for(let i=0; i<currentHearts; i++) heartString += "❤️";
-            heartsEl.innerText = heartString;
-            scoreEl.innerText = `Score: ${score}`;
-        }
+      if (hearts <= 0) {
+        endQuiz("Game Over!");
+        return;
+      }
 
-        function nextQuestion() {
-            isAnswering = true;
-            resultArea.style.display = 'none';
-            optionsContainer.innerHTML = ''; 
+      if (currentQuestion >= questions.length) {
+        endQuiz("You finished the quiz!");
+        return;
+      }
 
-            // 1. Pick correct answer
-            const correctIndex = Math.floor(Math.random() * consonants.length);
-            currentQuestion = consonants[correctIndex];
+      const question = questions[currentQuestion];
+      document.getElementById("questionLetter").textContent = question.letter;
+      document.getElementById("remainingDisplay").textContent =
+        "Remaining: " + (questions.length - currentQuestion);
 
-            // 2. Pick 3 distractors
-            let options = [currentQuestion];
-            while (options.length < 4) {
-                const randomItem = consonants[Math.floor(Math.random() * consonants.length)];
-                if (!options.includes(randomItem)) {
-                    options.push(randomItem);
-                }
-            }
+      const choicesContainer = document.getElementById("choicesContainer");
+      choicesContainer.innerHTML = "";
 
-            // 3. Shuffle
-            options.sort(() => Math.random() - 0.5);
+      question.choices.forEach(choice => {
+        const button = document.createElement("button");
+        button.className = "choice-btn";
+        button.textContent = choice;
+        button.onclick = () => checkAnswer(button, choice);
+        choicesContainer.appendChild(button);
+      });
+    }
 
-            // 4. Update UI
-            targetNameEl.innerText = currentQuestion.trans;
-            targetMeaningEl.innerText = `(${currentQuestion.meaning})`;
+    function checkAnswer(button, selectedChoice) {
+      const question = questions[currentQuestion];
+      const allButtons = document.querySelectorAll(".choice-btn");
 
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.classList.add('option-btn');
-                btn.innerText = opt.char;
-                btn.onclick = () => checkAnswer(opt, btn);
-                optionsContainer.appendChild(btn);
-            });
-        }
+      allButtons.forEach(btn => btn.disabled = true);
 
-        function checkAnswer(selected, btnElement) {
-            if (!isAnswering) return; 
-            isAnswering = false;
+      if (selectedChoice === question.answer) {
+        button.classList.add("correct");
+      } else {
+        button.classList.add("wrong");
+        hearts--;
+        updateHearts();
 
-            const allBtns = document.querySelectorAll('.option-btn');
-            let correctBtn = null;
-            allBtns.forEach(b => {
-                if(b.innerText === currentQuestion.char) correctBtn = b;
-            });
+        allButtons.forEach(btn => {
+          if (btn.textContent === question.answer) {
+            btn.classList.add("correct");
+          }
+        });
+      }
 
-            if (selected.char === currentQuestion.char) {
-                btnElement.classList.add('correct');
-                score++;
-                resultMsg.innerText = "Correct! 🎉";
-                resultMsg.style.color = "var(--success)";
-                resultDetail.innerHTML = `<strong>${currentQuestion.char}</strong> is indeed ${currentQuestion.trans}`;
-                updateStats();
-                resultArea.style.display = 'block';
-            } else {
-                btnElement.classList.add('wrong');
-                if(correctBtn) correctBtn.classList.add('correct'); 
-                
-                currentHearts--;
-                updateStats();
-                
-                if (currentHearts <= 0) {
-                    setTimeout(() => {
-                        finalScoreEl.innerText = score;
-                        gameOverScreen.style.display = 'flex';
-                    }, 800);
-                } else {
-                    resultMsg.innerText = "Incorrect!";
-                    resultMsg.style.color = "var(--danger)";
-                    resultDetail.innerHTML = `The correct character was <strong>${currentQuestion.char}</strong>`;
-                    resultArea.style.display = 'block';
-                }
-            }
-        }
+      setTimeout(() => {
+        currentQuestion++;
+        loadQuestion();
+      }, 900);
+    }
 
-        function restartGame() {
-            initGame();
-        }
-
-    </script>
+    function endQuiz(message) {
+      document.getElementById("questionLetter").textContent = "";
+      document.getElementById("choicesContainer").innerHTML = "";
+      document.getElementById("remainingDisplay").textContent = "Remaining: 0";
+      document.getElementById("endMessage").textContent = message;
+    }
+  </script>
 </body>
 </html>
